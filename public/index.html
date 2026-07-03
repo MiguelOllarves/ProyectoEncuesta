@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reporte de Cuadrantes - Puesto de Comando</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-200 p-4 md:p-8">
+
+  <div class="max-w-4xl mx-auto bg-white p-6 md:p-10 rounded-lg shadow-xl border-t-4 border-blue-900">
+    <h2 class="text-3xl font-extrabold mb-8 text-gray-800 border-b-2 border-gray-100 pb-4">Reporte de Situación</h2>
+
+    <form id="encuestaForm" class="space-y-8">
+
+      <section>
+        <h3 class="text-xl font-bold text-blue-900 mb-4 bg-blue-50 p-2 rounded">1. Ubicación</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div>
+            <label class="block text-sm font-bold text-gray-700">Cuadrante *</label>
+            <select name="cuadrante" required
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border bg-gray-50">
+              <option value="">Seleccione...</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-bold text-gray-700">Escuadra *</label>
+            <select name="escuadra" required
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border bg-gray-50">
+              <option value="">Seleccione...</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-bold text-gray-700">Sector *</label>
+            <input type="text" name="sector_ubicacion" required placeholder="Ej: Casco Central"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border bg-gray-50">
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h3 class="text-xl font-bold text-blue-900 mb-4 bg-blue-50 p-2 rounded">2. Situación de Personal</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div><label class="block text-xs font-bold text-gray-600">OFI/GRAL</label><input type="number" name="ofi_gral"
+              value="0" min="0" class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border"></div>
+          <div><label class="block text-xs font-bold text-gray-600">OFI/SUP</label><input type="number" name="ofi_sup"
+              value="0" min="0" class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border"></div>
+          <div><label class="block text-xs font-bold text-gray-600">OFI/SUB</label><input type="number" name="ofi_sub"
+              value="0" min="0" class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border"></div>
+          <div><label class="block text-xs font-bold text-gray-600">TT/PP</label><input type="number" name="tt_pp"
+              value="0" min="0" class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border"></div>
+          <div><label class="block text-xs font-bold text-gray-600">TT/AA</label><input type="number" name="tt_aa"
+              value="0" min="0" class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border"></div>
+          <div><label class="block text-xs font-bold text-gray-600">PROT. CIVIL</label><input type="number"
+              name="proteccion_civil" value="0" min="0"
+              class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border"></div>
+          <div><label class="block text-xs font-bold text-gray-600">BOMBEROS</label><input type="number" name="bomberos"
+              value="0" min="0" class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border"></div>
+          <div><label class="block text-xs font-bold text-gray-600">DELEGACIÓN EXTR.</label><input type="number"
+              name="delegacion_extr" value="0" min="0"
+              class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border"></div>
+        </div>
+      </section>
+
+      <section>
+        <h3 class="text-xl font-bold text-blue-900 mb-4 bg-blue-50 p-2 rounded">3. Evacuados</h3>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-bold text-green-700">Con Vida</label>
+            <input type="number" name="evacuados_con_vida" value="0" min="0"
+              class="mt-1 block w-full rounded-md border-green-300 shadow-sm p-2 border focus:ring-green-500 focus:border-green-500">
+          </div>
+          <div>
+            <label class="block text-sm font-bold text-red-700">Sin Vida</label>
+            <input type="number" name="evacuados_sin_vida" value="0" min="0"
+              class="mt-1 block w-full rounded-md border-red-300 shadow-sm p-2 border focus:ring-red-500 focus:border-red-500">
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h3 class="text-xl font-bold text-blue-900 mb-4 bg-blue-50 p-2 rounded">4. Maquinaria Empleada</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div><label class="block text-xs font-bold text-gray-600">RETROEXCAVADORA</label><input type="number"
+              name="retroexcavadora" value="0" min="0"
+              class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border"></div>
+          <div><label class="block text-xs font-bold text-gray-600">JUMBO</label><input type="number" name="jumbo"
+              value="0" min="0" class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border"></div>
+          <div><label class="block text-xs font-bold text-gray-600">CAMIONES VOLTEO</label><input type="number"
+              name="camiones_volteo" value="0" min="0"
+              class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border"></div>
+          <div><label class="block text-xs font-bold text-gray-600">PLANTAS ELÉCTRICAS</label><input type="number"
+              name="plantas_electricas" value="0" min="0"
+              class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border"></div>
+        </div>
+      </section>
+
+      <section>
+        <h3 class="text-xl font-bold text-blue-900 mb-4 bg-blue-50 p-2 rounded">5. Edificaciones y Estructuras</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div><label class="block text-xs font-bold text-gray-600">INTERVENIDAS</label><input type="number"
+              name="edificaciones_intervenidas" value="0" min="0"
+              class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border"></div>
+          <div><label class="block text-xs font-bold text-gray-600">INSPECCIONADAS</label><input type="number"
+              name="edificios_inspeccionados" value="0" min="0"
+              class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border"></div>
+          <div><label class="block text-xs font-bold text-gray-600">VIVIENDAS/CASAS</label><input type="number"
+              name="viviendas_casas" value="0" min="0"
+              class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border"></div>
+          <div><label class="block text-xs font-bold text-gray-600">LOCALES COMERCIALES</label><input type="number"
+              name="locales_comerciales" value="0" min="0"
+              class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border"></div>
+          <div><label class="block text-xs font-bold text-gray-600">ESCUELAS</label><input type="number" name="escuelas"
+              value="0" min="0" class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border"></div>
+          <div><label class="block text-xs font-bold text-gray-600">COLAPSADAS</label><input type="number"
+              name="edificaciones_colapsadas" value="0" min="0"
+              class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border"></div>
+          <div><label class="block text-xs font-bold text-gray-600">PARA DEMOLER</label><input type="number"
+              name="edificaciones_para_demoler" value="0" min="0"
+              class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border"></div>
+          <div><label class="block text-xs font-bold text-gray-600">RECUPERABLES</label><input type="number"
+              name="edificaciones_recuperables" value="0" min="0"
+              class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2 border"></div>
+        </div>
+      </section>
+
+      <section>
+        <h3 class="text-xl font-bold text-blue-900 mb-4 bg-blue-50 p-2 rounded">6. Resumen de Operaciones</h3>
+        <div>
+          <label class="block text-sm font-bold text-gray-700">Logros Alcanzados / Novedades *</label>
+          <textarea name="logros_alcanzados" required rows="4"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:border-blue-500 focus:ring-blue-500"></textarea>
+        </div>
+      </section>
+
+      <div class="pt-6 border-t-2 border-gray-100">
+        <div class="flex flex-col md:flex-row items-center gap-4">
+          <button type="submit"
+            class="w-full md:w-auto md:px-10 bg-blue-900 hover:bg-blue-800 text-white font-extrabold py-4 rounded-lg shadow-lg text-lg transition duration-300">
+            ENVIAR REPORTE AL PUESTO DE COMANDO
+          </button>
+          <a href="/login.html"
+            class="w-full md:w-auto md:px-10 text-center bg-gray-700 hover:bg-gray-600 text-white font-extrabold py-4 rounded-lg shadow-lg text-lg transition duration-300">
+            IR AL DASHBOARD
+          </a>
+        </div>
+      </div>
+    </form>
+
+    <div id="mensaje" class="mt-6 hidden p-4 rounded-lg text-center font-bold text-lg"></div>
+  </div>
+
+  <script>
+  document.getElementById('encuestaForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    const mensajeDiv = document.getElementById('mensaje');
+    const botonSubmit = form.querySelector('button[type="submit"]');
+
+    // Cambiar texto del botón mientras envía
+    const textoOriginal = botonSubmit.textContent;
+    botonSubmit.textContent = "Enviando...";
+    botonSubmit.disabled = true;
+
+    try {
+      const response = await fetch('/api/encuestas/guardar.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      // 1. Leemos la respuesta cruda de PHP como texto, no como JSON todavía
+      const textoCrudo = await response.text();
+
+      try {
+        // 2. Intentamos convertir ese texto a JSON
+        const result = JSON.parse(textoCrudo);
+
+        if (result.success) {
+          mensajeDiv.textContent = "✅ Reporte guardado exitosamente.";
+          mensajeDiv.className = "mt-6 p-4 rounded-lg text-center font-bold text-lg bg-green-100 text-green-800 block";
+          form.reset(); // Limpia el formulario
+          window.scrollTo(0, 0); // Sube al inicio de la página
+        } else {
+          mensajeDiv.textContent = "❌ Error interno: " + result.error;
+          mensajeDiv.className = "mt-6 p-4 rounded-lg text-center font-bold text-lg bg-red-100 text-red-800 block";
+        }
+      } catch (parseError) {
+        // 3. SI FALLA EL JSON, MOSTRAMOS EL TEXTO QUE ENVIÓ PHP (El error real)
+        console.error("Respuesta de PHP:", textoCrudo);
+        mensajeDiv.textContent = "❌ Error PHP: " + textoCrudo.substring(0, 150);
+        mensajeDiv.className = "mt-6 p-4 rounded-lg text-center font-bold text-lg bg-orange-100 text-orange-800 block";
+      }
+
+    } catch (error) {
+      console.error("Error de Red:", error);
+      mensajeDiv.textContent = "❌ Error de conexión con el servidor.";
+      mensajeDiv.className = "mt-6 p-4 rounded-lg text-center font-bold text-lg bg-red-100 text-red-800 block";
+    } finally {
+      // Restaurar el botón
+      botonSubmit.textContent = textoOriginal;
+      botonSubmit.disabled = false;
+
+      // Ocultar el mensaje después de 10 segundos para dar tiempo a leer el error
+      setTimeout(() => {
+        mensajeDiv.classList.add('hidden');
+      }, 10000);
+    }
+  });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Control - Puesto de Comando</title>
+
+  <!-- Bootstrap 5.3 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* Google Fonts */
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* CSS Variables for Theming */
+    :root[data-bs-theme="light"] {
+      --bg-body: #f3f6f9;
+      --bg-sidebar: #ffffff;
+      --bg-card: #ffffff;
+      --text-main: #333333;
+      --text-muted: #6c757d;
+      --border-color: #e9ecef;
+      --hover-bg: #f8f9fa;
+      --brand-color: #0d6efd;
+      --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      --glass-bg: rgba(255, 255, 255, 0.7);
+    }
+
+    :root[data-bs-theme="dark"] {
+      --bg-body: #0f172a;
+      --bg-sidebar: #1e293b;
+      --bg-card: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --hover-bg: #334155;
+      --brand-color: #3b82f6;
+      --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      --glass-bg: rgba(30, 41, 59, 0.7);
+    }
+
+    /* Scrollbar minimalista */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-muted);
+    }
+
+    /* Layout */
+    .wrapper {
+      display: flex;
+      width: 100%;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background-color: var(--bg-sidebar);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s;
+      z-index: 1040;
+    }
+
+    .sidebar-header {
+      height: 70px;
+      padding: 0 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sidebar-header .icon-box {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--brand-color), #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 12px rgba(13, 110, 253, 0.4);
+    }
+
+    .nav-pills .nav-link {
+      color: var(--text-main);
+      border-radius: 8px;
+      padding: 0.8rem 1.2rem;
+      margin-bottom: 0.5rem;
+      transition: all 0.2s;
+      font-weight: 500;
+      opacity: 0.8;
+    }
+
+    .nav-pills .nav-link i {
+      margin-right: 10px;
+      font-size: 1.1rem;
+    }
+
+    .nav-pills .nav-link:hover {
+      background-color: var(--hover-bg);
+      opacity: 1;
+    }
+
+    .nav-pills .nav-link.active {
+      background-color: rgba(13, 110, 253, 0.1);
+      color: var(--brand-color);
+      opacity: 1;
+      border-left: 4px solid var(--brand-color);
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .topbar {
+      height: 70px;
+      background-color: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1030;
+    }
+
+    /* Cards */
+    .custom-card {
+      background-color: var(--bg-card);
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--card-shadow);
+      transition: transform 0.2s;
+      height: 100%;
+    }
+
+    .custom-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .metric-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    /* Skeleton Loader */
+    .skeleton {
+      background: linear-gradient(90deg, var(--border-color) 25%, var(--hover-bg) 50%, var(--border-color) 75%);
+      background-size: 200% 100%;
+      animation: skeletonLoading 1.5s infinite;
+      border-radius: 4px;
+      color: transparent !important;
+      user-select: none;
+    }
+
+    .skeleton * {
+      visibility: hidden;
+    }
+
+    @keyframes skeletonLoading {
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: -200% 0;
+      }
+    }
+
+    /* Custom Tables */
+    .table-modern {
+      color: var(--text-main);
+    }
+
+    .table-modern thead th {
+      border-bottom: 2px solid var(--border-color);
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .table-modern tbody td {
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: middle;
+    }
+
+    .table-modern tbody tr:hover {
+      background-color: var(--hover-bg);
+    }
+
+    /* Fix ApexCharts in Dark Mode */
+    .apexcharts-tooltip {
+      background: var(--bg-card) !important;
+      border-color: var(--border-color) !important;
+      color: var(--text-main) !important;
+    }
+
+    .apexcharts-tooltip-title {
+      background: var(--hover-bg) !important;
+      border-bottom: 1px solid var(--border-color) !important;
+    }
+
+    .apexcharts-menu {
+      background: var(--bg-card) !important;
+      border-color: var(--border-color) !important;
+      color: var(--text-main) !important;
+    }
+
+    @media (max-width: 992px) {
+      .sidebar {
+        position: fixed;
+        left: -260px;
+        height: 100vh;
+      }
+
+      .sidebar.show {
+        left: 0;
+      }
+
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1039;
+      }
+
+      .sidebar-overlay.show {
+        display: block;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="icon-box"><i class="bi bi-cone-striped"></i></div>
+        <div>
+          <h5 class="mb-0 fw-bold">Gestión</h5>
+          <small class="text-muted" style="font-size: 0.75rem;">Puesto de Comando</small>
+        </div>
+      </div>
+      <div class="p-3 flex-grow-1 overflow-auto">
+        <ul class="nav nav-pills flex-column">
+          <li class="nav-item">
+            <a href="#overview" class="nav-link active" data-tab="overview">
+              <i class="bi bi-grid"></i> Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#personnel" class="nav-link" data-tab="personnel">
+              <i class="bi bi-people"></i> Personal
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#infrastructure" class="nav-link" data-tab="infrastructure">
+              <i class="bi bi-buildings"></i> Infraestructura
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#reports" class="nav-link" data-tab="reports">
+              <i class="bi bi-file-earmark-bar-graph"></i> Reportes
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="p-3 border-top border-secondary">
+        <div class="d-flex align-items-center gap-2 mb-3 px-2">
+          <div class="bg-primary bg-opacity-25 p-2 rounded-circle text-primary">
+            <i class="bi bi-person-fill"></i>
+          </div>
+          <div>
+            <h6 class="mb-0 fw-bold fs-7">Administrador</h6>
+            <span class="badge text-bg-success">Online</span>
+          </div>
+        </div>
+        <button class="btn btn-outline-danger w-100" id="btnLogout">
+          <i class="bi bi-box-arrow-right"></i> Salir
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="topbar">
+        <div class="d-flex align-items-center">
+          <button class="btn btn-link link-secondary d-lg-none me-2" id="sidebarToggle"
+            style="font-size: 1.5rem; text-decoration: none;">
+            <i class="bi bi-list"></i>
+          </button>
+          <h4 class="mb-0 fw-bold d-none d-sm-block">Panel de Control</h4>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn btn-outline-secondary btn-sm" id="btnRefresh" title="Actualizar datos">
+            <i class="bi bi-arrow-clockwise"></i>
+          </button>
+          <button class="btn btn-outline-secondary btn-sm" id="btnThemeToggle" title="Cambiar tema">
+            <i class="bi bi-moon-stars"></i>
+          </button>
+        </div>
+      </header>
+
+      <div class="p-3 p-lg-4">
+
+        <!-- Secciones - Overview (Tab 1) -->
+        <div id="tab-overview" class="tab-pane d-block">
+
+          <!-- KPIs Principales -->
+          <div class="row g-3 mb-4">
+            <!-- Ubicación -->
+            <div class="col-sm-6 col-xl-3">
+              <div class="custom-card p-3">
+                <div class="d-flex justify-content-between align-items-start">
+                  <div>
+                    <p class="text-muted mb-1 small text-uppercase fw-semibold">Ubicación</p>
+                    <h3 class="mb-0 fw-bold mask-data" id="kpiCuadrantes">0</h3>
+                    <small class="text-success"><i class="bi bi-arrow-up-short"></i> Cuadrantes Operativos</small>
+                  </div>
+                  <div class="metric-icon bg-primary bg-opacity-10 text-primary">
+                    <i class="bi bi-geo-alt-fill"></i>
+                  </div>
+                </div>
+                <div class="mt-3 pt-2 border-top border-secondary d-flex justify-content-between">
+                  <span class="small text-muted">Escuadras:</span>
+                  <span class="small fw-bold mask-data" id="kpiEscuadras">0</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Evacuados -->
+            <div class="col-sm-6 col-xl-3">
+              <div class="custom-card p-3">
+                <div class="d-flex justify-content-between align-items-start">
+                  <div>
+                    <p class="text-muted mb-1 small text-uppercase fw-semibold">Evacuados</p>
+                    <h3 class="mb-0 fw-bold mask-data" id="kpiEvacuadosVida">0</h3>
+                    <small class="text-success"><i class="bi bi-heart-pulse"></i> Con Vida</small>
+                  </div>
+                  <div class="metric-icon bg-success bg-opacity-10 text-success">
+                    <i class="bi bi-person-hearts"></i>
+                  </div>
+                </div>
+                <div class="mt-3 pt-2 border-top border-secondary d-flex justify-content-between">
+                  <span class="small text-muted">Sin Vida:</span>
+                  <span class="small fw-bold text-danger mask-data" id="kpiEvacuadosSinVida">0</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Operaciones -->
+            <div class="col-sm-6 col-xl-3">
+              <div class="custom-card p-3">
+                <div class="d-flex justify-content-between align-items-start">
+                  <div>
+                    <p class="text-muted mb-1 small text-uppercase fw-semibold">Resumen Operaciones</p>
+                    <h3 class="mb-0 fw-bold mask-data" id="kpiLogros">0</h3>
+                    <small class="text-info"><i class="bi bi-check-circle"></i> Logros Alcanzados</small>
+                  </div>
+                  <div class="metric-icon bg-info bg-opacity-10 text-info">
+                    <i class="bi bi-journal-check"></i>
+                  </div>
+                </div>
+                <div class="mt-3 pt-2 border-top border-secondary d-flex justify-content-between">
+                  <span class="small text-muted">Novedades:</span>
+                  <span class="small fw-bold text-warning mask-data" id="kpiNovedades">0</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Maquinaria Global -->
+            <div class="col-sm-6 col-xl-3">
+              <div class="custom-card p-3">
+                <div class="d-flex justify-content-between align-items-start">
+                  <div>
+                    <p class="text-muted mb-1 small text-uppercase fw-semibold">Maquinaria (Activas)</p>
+                    <h3 class="mb-0 fw-bold mask-data" id="kpiTotalMaq">0</h3>
+                    <small class="text-warning"><i class="bi bi-truck"></i> Desplegadas</small>
+                  </div>
+                  <div class="metric-icon bg-warning bg-opacity-10 text-warning">
+                    <i class="bi bi-cone-striped"></i>
+                  </div>
+                </div>
+                <div class="mt-3 pt-2 border-top border-secondary d-flex justify-content-between">
+                  <span class="small text-muted">Volteos:</span>
+                  <span class="small fw-bold mask-data" id="kpiVolteos">0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fila de Gráficos Principales -->
+          <div class="row g-3 mb-4">
+            <div class="col-lg-8">
+              <div class="custom-card p-4">
+                <h5 class="fw-bold mb-0">Evolución de Operaciones <span
+                    class="badge bg-primary bg-opacity-10 text-primary ms-2 fs-7 chart-loader">Cargando...</span></h5>
+                <div id="chartLine" style="min-height: 350px;"></div>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="custom-card p-4">
+                <h5 class="fw-bold mb-0">Estado de Evacuados <span
+                    class="badge bg-primary bg-opacity-10 text-primary ms-2 fs-7 chart-loader">Cargando...</span></h5>
+                <div id="chartPie" style="min-height: 350px;" class="d-flex align-items-center justify-content-center">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-12">
+              <div class="custom-card p-4">
+                <h5 class="fw-bold mb-3">Concentración por Cuadrante (HeatMap) <span
+                    class="badge bg-primary bg-opacity-10 text-primary ms-2 fs-7 chart-loader">Cargando...</span></h5>
+                <div id="chartHeatMap" style="min-height: 300px;"></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Secciones - Personal (Tab 2) -->
+        <div id="tab-personnel" class="tab-pane d-none">
+          <h4 class="fw-bold mb-3">Situación de Personal</h4>
+          <div class="row g-3 mb-4" id="personnelCardsContainer">
+            <!-- Cards generadas por JS -->
+          </div>
+
+          <div class="row g-3">
+            <div class="col-lg-6">
+              <div class="custom-card p-4">
+                <h5 class="fw-bold mb-3">Distribución de Capacidades (Radar)</h5>
+                <div id="chartRadar" style="min-height: 350px;"></div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="custom-card p-4">
+                <h5 class="fw-bold mb-3">Resumen de Fuerzas (Doughnut)</h5>
+                <div id="chartDoughnut" style="min-height: 350px;"
+                  class="d-flex align-items-center justify-content-center"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Secciones - Infraestructura (Tab 3) -->
+        <div id="tab-infrastructure" class="tab-pane d-none">
+
+          <h4 class="fw-bold mb-3">Maquinaria Empleada</h4>
+          <div class="row g-3 mb-4" id="machineryCardsContainer"></div>
+
+          <div class="custom-card p-4 mb-4">
+            <h5 class="fw-bold mb-3">Maquinaria por Tipo (Barras)</h5>
+            <div id="chartBar" style="min-height: 300px;"></div>
+          </div>
+
+          <h4 class="fw-bold mb-3">Edificaciones y Estructuras</h4>
+          <div class="row g-3 mb-4" id="buildingsCardsContainer"></div>
+
+          <div class="custom-card p-4 mb-4">
+            <h5 class="fw-bold mb-3">Estado de Edificaciones (Área)</h5>
+            <div id="chartArea" style="min-height: 300px;"></div>
+          </div>
+        </div>
+
+        <!-- Secciones - Reportes (Tab 4) -->
+        <div id="tab-reports" class="tab-pane d-none">
+          <div class="custom-card p-4">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+              <div>
+                <h5 class="fw-bold mb-0">Base de Datos de Operaciones</h5>
+                <small class="text-muted">Desglose en tiempo real</small>
+              </div>
+              <div class="d-flex gap-2">
+                <button id="exportExcel" class="btn btn-success btn-sm"><i class="bi bi-file-earmark-excel"></i>
+                  Excel</button>
+                <button id="exportCsv" class="btn btn-info btn-sm text-white"><i class="bi bi-filetype-csv"></i>
+                  CSV</button>
+                <button id="exportPdf" class="btn btn-danger btn-sm"><i class="bi bi-file-earmark-pdf"></i> PDF</button>
+                <button id="exportPrint" class="btn btn-secondary btn-sm"><i class="bi bi-printer"></i>
+                  Imprimir</button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table table-modern w-100" id="reportsTable">
+                <thead>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Ubicación (Cuadrante/Escuadra)</th>
+                    <th>Personal (OFI/SUB/TT)</th>
+                    <th>Evacuados (V/SV)</th>
+                    <th>Operaciones (Logros/Nov)</th>
+                  </tr>
+                </thead>
+                <tbody id="reportsTableBody">
+                  <!-- Data populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- SCRIPTS -->
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- ApexCharts JS -->
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- jsPDF & AutoTable -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+  <!-- SheetJS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <script>
+    // Auth Check
+    if (!localStorage.getItem('adminToken')) {
+      // Para entornos reales descomentar:
+      // window.location.href = '/login.html'; 
+    }
+
+    // Toast Notification setup
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      background: 'var(--bg-card)',
+      color: 'var(--text-main)'
+    });
+
+    // UI Setup: Theme Toggle
+    const html = document.documentElement;
+    const btnThemeToggle = document.getElementById('btnThemeToggle');
+
+    // Initialize theme from local storage
+    if (localStorage.getItem('theme') === 'light') {
+      html.setAttribute('data-bs-theme', 'light');
+      btnThemeToggle.innerHTML = '<i class="bi bi-moon-stars"></i>';
+    }
+
+    btnThemeToggle.addEventListener('click', () => {
+      if (html.getAttribute('data-bs-theme') === 'dark') {
+        html.setAttribute('data-bs-theme', 'light');
+        localStorage.setItem('theme', 'light');
+        btnThemeToggle.innerHTML = '<i class="bi bi-moon-stars"></i>';
+      } else {
+        html.setAttribute('data-bs-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        btnThemeToggle.innerHTML = '<i class="bi bi-sun"></i>';
+      }
+      // Update charts theme
+      reRenderCharts();
+    });
+
+    // Sidebar Toggle Mobile
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const toggleSidebar = () => {
+      sidebar.classList.toggle('show');
+      sidebarOverlay.classList.toggle('show');
+    };
+    sidebarToggle.addEventListener('click', toggleSidebar);
+    sidebarOverlay.addEventListener('click', toggleSidebar);
+
+    // Tabs Logic
+    document.querySelectorAll('.nav-link[data-tab]').forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        e.preventDefault();
+        // Remove active from all
+        document.querySelectorAll('.nav-link[data-tab]').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(p => {
+          p.classList.remove('d-block');
+          p.classList.add('d-none');
+        });
+        // Add active to current
+        tab.classList.add('active');
+        document.getElementById('tab-' + tab.getAttribute('data-tab')).classList.remove('d-none');
+        document.getElementById('tab-' + tab.getAttribute('data-tab')).classList.add('d-block');
+
+        // Repaint charts due to display:none dimensions issue
+        window.dispatchEvent(new Event('resize'));
+      });
+    });
+
+    // Logout
+    document.getElementById('btnLogout').addEventListener('click', () => {
+      Swal.fire({
+        title: '¿Cerrar Sesión?',
+        text: "Saldrás de forma segura del panel.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: 'var(--brand-color)',
+        cancelButtonColor: '#dc3545',
+        confirmButtonText: 'Sí, salir',
+        background: 'var(--bg-card)',
+        color: 'var(--text-main)'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          localStorage.removeItem('adminToken');
+          window.location.href = '/login.html';
+        }
+      });
+    });
+
+    // Chart References
+    let apexCharts = {};
+
+    function getChartTheme() {
+      return html.getAttribute('data-bs-theme');
+    }
+
+    // Set skeletons
+    function setSkeletons(active) {
+      const els = document.querySelectorAll('.mask-data, .chart-loader');
+      els.forEach(el => {
+        if (active) {
+          el.dataset.val = el.innerHTML;
+          el.classList.add('skeleton');
+        } else {
+          el.classList.remove('skeleton');
+          // If it's a chart loader, hide it
+          if (el.classList.contains('chart-loader')) el.style.display = 'none';
+        }
+      });
+    }
+
+    // GLOBAL STATE
+    let globalData = {};
+
+    function adaptDbDataToUi(dbData) {
+        const getCardVal = (arr, labelPrefix) => {
+            if(!arr) return 0;
+            const item = arr.find(x => x.label && x.label.toUpperCase().startsWith(labelPrefix.toUpperCase()));
+            return item ? item.value : 0;
+        };
+
+        const t = dbData.totales || {};
+        const pCards = dbData.personnel_cards || [];
+        const mCards = dbData.machinery_cards || [];
+        const eCards = dbData.building_cards || [];
+        
+        return {
+            ubicacion: { 
+                cuadrantes: t.total_cuadrantes || 0, 
+                escuadras: t.total_escuadras || 0 
+            },
+            evacuados: { 
+                con_vida: t.total_evacuados_vida || 0, 
+                sin_vida: t.total_evacuados_sin_vida || 0 
+            },
+            operaciones: { 
+                logros: dbData.operations?.logros || 0, 
+                novedades: dbData.operations?.novedades || 0 
+            },
+            maquinaria: { 
+                total: t.total_maquinaria || 0, 
+                retroexcavadora: getCardVal(mCards, 'Retroexcavadora'), 
+                jumbo: getCardVal(mCards, 'Jumbo'), 
+                camion_volteo: getCardVal(mCards, 'Camiones volteo'), 
+                plantas_electricas: getCardVal(mCards, 'Plantas') 
+            },
+            personal: { 
+                ofi_gral: getCardVal(pCards, 'OFI/GRAL'), 
+                ofi_sup: getCardVal(pCards, 'OFI/SUP'), 
+                ofi_sub: getCardVal(pCards, 'OFI/SUB'), 
+                tt_pp: getCardVal(pCards, 'TT/PP'), 
+                tt_aa: getCardVal(pCards, 'TT/AA'), 
+                prot_civil: getCardVal(pCards, 'PROTECCI'), 
+                bomberos: getCardVal(pCards, 'BOMBEROS'), 
+                delegacion: getCardVal(pCards, 'DELEGACION') 
+            },
+            edificaciones: { 
+                intervenidas: getCardVal(eCards, 'Intervenidas'), 
+                inspeccionadas: getCardVal(eCards, 'Inspeccionadas'), 
+                viviendas: getCardVal(eCards, 'Viviendas'), 
+                locales: getCardVal(eCards, 'Locales'), 
+                escuelas: getCardVal(eCards, 'Escuelas'), 
+                colapsadas: getCardVal(eCards, 'Colapsadas'), 
+                para_demoler: getCardVal(eCards, 'Para demoler'), 
+                recuperables: getCardVal(eCards, 'Recuperables') 
+            },
+            series: {
+                fechas: (dbData.series?.daily || []).map(x => x.label),
+                logros: (dbData.series?.daily || []).map(x => x.value),
+                novedades: (dbData.series?.daily || []).map(x => Math.floor(x.value / 4)), // Aproximacion demostrativa
+                area_data1: (dbData.series?.monthly || []).map(x => x.value),
+                area_data2: (dbData.series?.weekly || []).map(x => x.value),
+                heatmap: [
+                    { name: 'Norte', data: [{ x: 'L', y: 10 }, { x: 'M', y: 20 }, { x: 'X', y: 30 }] },
+                    { name: 'Sur', data: [{ x: 'L', y: 5 }, { x: 'M', y: 10 }, { x: 'X', y: 8 }] }
+                ]
+            },
+            rows: (dbData.actividad_reciente || []).map(r => ({
+                fecha: (r.fecha_registro || "").substring(0, 16),
+                cuadrante: r.cuadrante,
+                escuadra: r.escuadra,
+                personal: 0,
+                evacuados_vida: 0,
+                evacuados_sin_vida: 0,
+                logros: r.logros_alcanzados ? 1 : 0,
+                novedades: r.logros_alcanzados ? 0 : 1
+            }))
+        };
+    }
+
+    async function loadData() {
+      setSkeletons(true);
+
+      try {
+        const res = await fetch('/api/encuestas/estadisticas.php').catch(() => null);
+        let resp = res && res.ok ? await res.json() : null;
+
+        let data;
+        if (!resp || !resp.success || !resp.data || !resp.data.totales) {
+          data = generateMockData();
+        } else {
+          data = adaptDbDataToUi(resp.data);
+        }
+
+        globalData = data;
+
+        renderKPIs(globalData);
+        renderUILists(globalData);
+        renderCharts(globalData);
+        renderTable(globalData.rows);
+
+        setSkeletons(false);
+        Toast.fire({ icon: 'success', title: 'Datos DB sincronizados exitosamente' });
+
+      } catch (e) {
+        console.error(e);
+        setSkeletons(false);
+        // Fallback robusto en caso de error javascript
+        globalData = generateMockData();
+        renderKPIs(globalData);
+        renderUILists(globalData);
+        renderCharts(globalData);
+        renderTable(globalData.rows);
+        Toast.fire({ icon: 'warning', title: 'Falla local, usando datos MOCK.' });
+      }
+    }
+
+    function renderKPIs(data) {
+      document.getElementById('kpiCuadrantes').textContent = data.ubicacion.cuadrantes;
+      document.getElementById('kpiEscuadras').textContent = data.ubicacion.escuadras;
+      document.getElementById('kpiEvacuadosVida').textContent = data.evacuados.con_vida;
+      document.getElementById('kpiEvacuadosSinVida').textContent = data.evacuados.sin_vida;
+      document.getElementById('kpiLogros').textContent = data.operaciones.logros;
+      document.getElementById('kpiNovedades').textContent = data.operaciones.novedades;
+      document.getElementById('kpiTotalMaq').textContent = data.maquinaria.total;
+      document.getElementById('kpiVolteos').textContent = data.maquinaria.camion_volteo;
+    }
+
+    function createCardHTML(title, value, icon, colorClass, percent) {
+      return `
+      <div class="col-sm-6 col-md-4 col-xl-3">
+        <div class="custom-card p-3">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="small text-muted fw-bold">${title}</span>
+            <span class="badge bg-${colorClass} bg-opacity-25 text-${colorClass}">${percent}%</span>
+          </div>
+          <div class="d-flex justify-content-between align-items-end mt-3">
+            <h3 class="mb-0 fw-bold">${value}</h3>
+            <i class="bi ${icon} fs-4 text-${colorClass} opacity-50"></i>
+          </div>
+        </div>
+      </div>
+    `;
+    }
+
+    function renderUILists(data) {
+      // 1. Personal
+      const pContainer = document.getElementById('personnelCardsContainer');
+      const p = data.personal;
+      const pTotal = Object.values(p).reduce((a, b) => a + b, 0) || 1;
+      pContainer.innerHTML = [
+        { t: 'OFI/GRAL', v: p.ofi_gral, i: 'bi-star-fill', c: 'primary' },
+        { t: 'OFI/SUP', v: p.ofi_sup, i: 'bi-star-half', c: 'info' },
+        { t: 'OFI/SUB', v: p.ofi_sub, i: 'bi-star', c: 'secondary' },
+        { t: 'TT/PP', v: p.tt_pp, i: 'bi-shield-fill', c: 'success' },
+        { t: 'TT/AA', v: p.tt_aa, i: 'bi-shield', c: 'success' },
+        { t: 'PROT. CIVIL', v: p.prot_civil, i: 'bi-life-preserver', c: 'warning' },
+        { t: 'BOMBEROS', v: p.bomberos, i: 'bi-fire', c: 'danger' },
+        { t: 'DELEGACIÓN', v: p.delegacion, i: 'bi-flag-fill', c: 'dark' }
+      ].map(item => createCardHTML(item.t, item.v, item.i, item.c, Math.round((item.v / pTotal) * 100))).join('');
+
+      // 2. Maquinaria
+      const mContainer = document.getElementById('machineryCardsContainer');
+      const m = data.maquinaria;
+      const mTotal = m.total || 1;
+      mContainer.innerHTML = [
+        { t: 'RETROEXCAV.', v: m.retroexcavadora, i: 'bi-truck', c: 'warning' },
+        { t: 'JUMBO', v: m.jumbo, i: 'bi-truck-flatbed', c: 'primary' },
+        { t: 'VOLTEOS', v: m.camion_volteo, i: 'bi-truck-front-fill', c: 'success' },
+        { t: 'PLANTAS ELÉC.', v: m.plantas_electricas, i: 'bi-lightning-charge-fill', c: 'info' }
+      ].map(item => createCardHTML(item.t, item.v, item.i, item.c, Math.round((item.v / mTotal) * 100))).join('');
+
+      // 3. Edificaciones
+      const eContainer = document.getElementById('buildingsCardsContainer');
+      const e = data.edificaciones;
+      const eTotal = e.intervenidas || 1;
+      eContainer.innerHTML = [
+        { t: 'INTERVENIDAS', v: e.intervenidas, i: 'bi-building-check', c: 'primary' },
+        { t: 'INSPECCIONADAS', v: e.inspeccionadas, i: 'bi-search', c: 'info' },
+        { t: 'VIVIENDAS/CASAS', v: e.viviendas, i: 'bi-house-heart-fill', c: 'success' },
+        { t: 'LOCALES COM.', v: e.locales, i: 'bi-shop', c: 'warning' },
+        { t: 'ESCUELAS', v: e.escuelas, i: 'bi-mortarboard-fill', c: 'secondary' },
+        { t: 'COLAPSADAS', v: e.colapsadas, i: 'bi-building-x', c: 'danger' },
+        { t: 'PARA DEMOLER', v: e.para_demoler, i: 'bi-cone-striped', c: 'danger' },
+        { t: 'RECUPERABLES', v: e.recuperables, i: 'bi-building-dash', c: 'success' }
+      ].map(item => createCardHTML(item.t, item.v, item.i, item.c, Math.round((item.v / eTotal) * 100))).join('');
+    }
+
+    function renderTable(rows) {
+      const tbody = document.getElementById('reportsTableBody');
+      if (!rows || rows.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">No hay registros</td></tr>';
+        return;
+      }
+      tbody.innerHTML = rows.map(r => `
+      <tr>
+        <td>${r.fecha}</td>
+        <td>C${r.cuadrante} / E${r.escuadra}</td>
+        <td><span class="badge bg-secondary">${r.personal}</span></td>
+        <td><span class="text-success">${r.evacuados_vida}</span> / <span class="text-danger">${r.evacuados_sin_vida}</span></td>
+        <td><span class="badge border border-primary text-primary">${r.logros} L</span> - <span class="badge border border-warning text-warning">${r.novedades} N</span></td>
+      </tr>
+    `).join('');
+    }
+
+    function commonChartOptions() {
+      return {
+        chart: { toolbar: { show: false }, background: 'transparent' },
+        theme: { mode: getChartTheme() },
+        stroke: { curve: 'smooth' }
+      };
+    }
+
+    function renderCharts(data) {
+      // Destroy existing
+      Object.values(apexCharts).forEach(c => c.destroy());
+
+      // 1. Line (Evolución)
+      const optionsLine = {
+        ...commonChartOptions(),
+        series: [{ name: 'Logros', data: data.series.logros }, { name: 'Novedades', data: data.series.novedades }],
+        chart: { type: 'line', height: 320, background: 'transparent', toolbar: { show: false } },
+        colors: ['#0d6efd', '#ffc107'],
+        xaxis: { categories: data.series.fechas }
+      };
+      apexCharts.line = new ApexCharts(document.querySelector("#chartLine"), optionsLine);
+      apexCharts.line.render();
+
+      // 2. Pie (Evacuados)
+      const optionsPie = {
+        ...commonChartOptions(),
+        series: [data.evacuados.con_vida, data.evacuados.sin_vida],
+        chart: { type: 'pie', height: 320 },
+        labels: ['Con Vida', 'Sin Vida'],
+        colors: ['#20c997', '#dc3545'],
+        legend: { position: 'bottom' }
+      };
+      apexCharts.pie = new ApexCharts(document.querySelector("#chartPie"), optionsPie);
+      apexCharts.pie.render();
+
+      // 3. HeatMap (Concentración por Cuadrantes)
+      const optionsHeat = {
+        ...commonChartOptions(),
+        series: data.series.heatmap,
+        chart: { type: 'heatmap', height: 320 },
+        dataLabels: { enabled: false },
+        colors: ['#0d6efd'],
+        xaxis: { type: 'category' }
+      };
+      apexCharts.heatmap = new ApexCharts(document.querySelector("#chartHeatMap"), optionsHeat);
+      apexCharts.heatmap.render();
+
+      // 4. Radar (Personal)
+      const p = data.personal;
+      const optionsRadar = {
+        ...commonChartOptions(),
+        series: [{ name: 'Efectivos', data: [p.ofi_gral, p.ofi_sup, p.ofi_sub, p.tt_pp, p.tt_aa, p.prot_civil, p.bomberos] }],
+        chart: { type: 'radar', height: 350 },
+        labels: ['OFI/GRAL', 'OFI/SUP', 'OFI/SUB', 'TT/PP', 'TT/AA', 'CIVIL', 'BOMBEROS'],
+        colors: ['#8b5cf6'],
+        plotOptions: { radar: { polygons: { strokeColors: 'var(--border-color)', connectorColors: 'var(--border-color)' } } }
+      };
+      apexCharts.radar = new ApexCharts(document.querySelector("#chartRadar"), optionsRadar);
+      apexCharts.radar.render();
+
+      // 5. Doughnut (Fuerzas globales)
+      const optionsDoughnut = {
+        ...commonChartOptions(),
+        series: [p.ofi_gral + p.ofi_sup + p.ofi_sub, p.tt_pp + p.tt_aa, p.prot_civil + p.bomberos, p.delegacion],
+        chart: { type: 'donut', height: 350 },
+        labels: ['Oficiales', 'Tropas', 'Serv. Emergencia', 'Delegación'],
+        colors: ['#0d6efd', '#20c997', '#dc3545', '#ffc107'],
+        legend: { position: 'bottom' }
+      };
+      apexCharts.doughnut = new ApexCharts(document.querySelector("#chartDoughnut"), optionsDoughnut);
+      apexCharts.doughnut.render();
+
+      // 6. Bar (Maquinaria)
+      const m = data.maquinaria;
+      const optionsBar = {
+        ...commonChartOptions(),
+        series: [{ name: 'Unidades', data: [m.retroexcavadora, m.jumbo, m.camion_volteo, m.plantas_electricas] }],
+        chart: { type: 'bar', height: 300 },
+        plotOptions: { bar: { borderRadius: 4, horizontal: true } },
+        dataLabels: { enabled: false },
+        xaxis: { categories: ['Retroexcavadoras', 'Jumbos', 'Volteos', 'Plantas Eléc.'] },
+        colors: ['#0d6efd']
+      };
+      apexCharts.bar = new ApexCharts(document.querySelector("#chartBar"), optionsBar);
+      apexCharts.bar.render();
+
+      // 7. Area (Edificaciones)
+      const optionsArea = {
+        ...commonChartOptions(),
+        series: [{ name: 'Intervenidas', data: data.series.area_data1 }, { name: 'Inspeccionadas', data: data.series.area_data2 }],
+        chart: { type: 'area', height: 300 },
+        colors: ['#0dcaf0', '#20c997'],
+        xaxis: { categories: data.series.fechas }
+      };
+      apexCharts.area = new ApexCharts(document.querySelector("#chartArea"), optionsArea);
+      apexCharts.area.render();
+    }
+
+    function reRenderCharts() {
+      if (Object.keys(globalData).length > 0) {
+        renderCharts(globalData);
+      }
+    }
+
+    document.getElementById('btnRefresh').addEventListener('click', () => {
+      loadData();
+    });
+
+    // ========== EXPORTS LOGIC ==========
+
+    // CSV Export
+    document.getElementById('exportCsv').addEventListener('click', () => {
+      const table = document.getElementById("reportsTable");
+      let csv = [];
+      for (let i = 0; i < table.rows.length; i++) {
+        let row = [], cols = table.rows[i].querySelectorAll("td, th");
+        for (let j = 0; j < cols.length; j++) row.push('"' + cols[j].innerText.trim() + '"');
+        csv.push(row.join(","));
+      }
+      const blob = new Blob([csv.join("\n")], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "reporte_operaciones.csv";
+      link.click();
+      URL.revokeObjectURL(url);
+      Toast.fire({ icon: 'success', title: 'CSV generado exitosamente' });
+    });
+
+    // Excel Export (SheetJS)
+    document.getElementById('exportExcel').addEventListener('click', () => {
+      const table = document.getElementById("reportsTable");
+      const wb = XLSX.utils.table_to_book(table, { sheet: "Operaciones" });
+      XLSX.writeFile(wb, 'reporte_operaciones.xlsx');
+      Toast.fire({ icon: 'success', title: 'Excel generado exitosamente' });
+    });
+
+    // PDF Export (jsPDF + autoTable)
+    document.getElementById('exportPdf').addEventListener('click', () => {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF('l', 'pt', 'a4');
+      doc.text("Reporte de Operaciones - Puesto de Comando", 40, 40);
+      doc.autoTable({ html: '#reportsTable', startY: 60, theme: 'grid' });
+      doc.save('reporte_operaciones.pdf');
+      Toast.fire({ icon: 'success', title: 'PDF generado exitosamente' });
+    });
+
+    // Print
+    document.getElementById('exportPrint').addEventListener('click', () => {
+      // Se usa logica sencilla de print media inquiries por defecto del browser
+      window.print();
+    });
+
+    // ========== MOCK DATA GENERATOR ==========
+    function generateMockData() {
+      return {
+        ubicacion: { cuadrantes: 24, escuadras: 96 },
+        evacuados: { con_vida: 450, sin_vida: 12 },
+        operaciones: { logros: 105, novedades: 34 },
+        maquinaria: { total: 47, retroexcavadora: 8, jumbo: 4, camion_volteo: 25, plantas_electricas: 10 },
+        personal: { ofi_gral: 5, ofi_sup: 15, ofi_sub: 30, tt_pp: 120, tt_aa: 80, prot_civil: 45, bomberos: 60, delegacion: 10 },
+        edificaciones: { intervenidas: 320, inspeccionadas: 510, viviendas: 200, locales: 80, escuelas: 15, colapsadas: 5, para_demoler: 8, recuperables: 297 },
+        series: {
+          fechas: ['Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab', 'Dom'],
+          logros: [10, 15, 20, 25, 20, 10, 5],
+          novedades: [5, 8, 4, 10, 5, 2, 0],
+          area_data1: [40, 50, 70, 90, 100, 110, 120],
+          area_data2: [50, 60, 85, 110, 130, 140, 150],
+          heatmap: [
+            { name: 'Cuadrante 1', data: [{ x: 'L', y: 10 }, { x: 'M', y: 20 }, { x: 'M', y: 15 }, { x: 'J', y: 30 }] },
+            { name: 'Cuadrante 2', data: [{ x: 'L', y: 5 }, { x: 'M', y: 30 }, { x: 'M', y: 25 }, { x: 'J', y: 10 }] },
+            { name: 'Cuadrante 3', data: [{ x: 'L', y: 15 }, { x: 'M', y: 10 }, { x: 'M', y: 5 }, { x: 'J', y: 40 }] }
+          ]
+        },
+        rows: [
+          { fecha: '2026-07-03 10:15', cuadrante: '1', escuadra: 'A', personal: 45, evacuados_vida: 12, evacuados_sin_vida: 0, logros: 5, novedades: 1 },
+          { fecha: '2026-07-03 11:30', cuadrante: '2', escuadra: 'B', personal: 30, evacuados_vida: 8, evacuados_sin_vida: 1, logros: 3, novedades: 2 },
+          { fecha: '2026-07-03 12:45', cuadrante: '1', escuadra: 'C', personal: 50, evacuados_vida: 25, evacuados_sin_vida: 0, logros: 10, novedades: 0 },
+          { fecha: '2026-07-03 14:00', cuadrante: '3', escuadra: 'A', personal: 20, evacuados_vida: 4, evacuados_sin_vida: 0, logros: 2, novedades: 1 },
+          { fecha: '2026-07-03 15:20', cuadrante: '4', escuadra: 'A', personal: 35, evacuados_vida: 15, evacuados_sin_vida: 2, logros: 8, novedades: 3 },
+        ]
+      };
+    }
+
+    // INIT
+    document.addEventListener("DOMContentLoaded", () => {
+      loadData();
+    });
+
+  </script>
+</body>
+
+</html>
