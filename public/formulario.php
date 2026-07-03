@@ -88,7 +88,7 @@
         
         <!-- 1. Ubicación -->
         <section>
-          <div class="section-title">1. Ubicación</div>
+          <div class="section-title">1. UbicaciónDFDFD</div>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <label class="form-label">Cuadrante *</label>
