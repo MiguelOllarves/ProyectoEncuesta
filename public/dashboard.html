@@ -359,6 +359,13 @@
         <!-- Secciones - Overview (Tab 1) -->
         <div id="tab-overview" class="tab-pane d-block">
 
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+            <div>
+              <h5 class="fw-bold mb-0">Visión General</h5>
+              <small class="text-muted">Indicadores clave de rendimiento</small>
+            </div>
+          </div>
+
           <!-- KPIs Principales -->
           <div class="row g-3 mb-4">
             <!-- Ubicación -->
@@ -475,7 +482,12 @@
 
         <!-- Secciones - Personal (Tab 2) -->
         <div id="tab-personnel" class="tab-pane d-none">
-          <h4 class="fw-bold mb-3">Situación de Personal</h4>
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+            <div>
+              <h5 class="fw-bold mb-0">Situación de Personal</h5>
+              <small class="text-muted">Fuerza humana desplegada</small>
+            </div>
+          </div>
           <div class="row g-3 mb-4" id="personnelCardsContainer">
             <!-- Cards generadas por JS -->
           </div>
@@ -499,8 +511,14 @@
 
         <!-- Secciones - Infraestructura (Tab 3) -->
         <div id="tab-infrastructure" class="tab-pane d-none">
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+            <div>
+              <h5 class="fw-bold mb-0">Infraestructura y Maquinaria</h5>
+              <small class="text-muted">Recursos materiales desplegados</small>
+            </div>
+          </div>
 
-          <h4 class="fw-bold mb-3">Maquinaria Empleada</h4>
+          <h6 class="fw-bold mb-3 text-secondary">Maquinaria Empleada</h6>
           <div class="row g-3 mb-4" id="machineryCardsContainer"></div>
 
           <div class="custom-card p-4 mb-4">
@@ -544,30 +562,16 @@
                     <th>Fecha</th>
                     <th>C/E</th>
                     <th>Ubicación</th>
-                    <th>Ofic/Gral</th>
-                    <th>Ofic/Sup</th>
-                    <th>Ofic/Sub</th>
+                    <th>OFI/GRAL</th>
+                    <th>OFI/SUP</th>
+                    <th>OFI/SUB</th>
                     <th>TT/PP</th>
                     <th>TT/AA</th>
-                    <th>Prot.Civil</th>
-                    <th>Bomberos</th>
-                    <th>Deleg.Ext</th>
-                    <th class="text-primary fw-bold">Total Per.</th>
-                    <th>Evac.Vida</th>
-                    <th>Evac.SinVida</th>
-                    <th>Retroexc.</th>
-                    <th>Jumbos</th>
-                    <th>Volteos</th>
-                    <th>Plantas</th>
-                    <th>Edif. Int.</th>
-                    <th>Edif. Insp.</th>
-                    <th>Viviendas</th>
-                    <th>Locales</th>
-                    <th>Escuelas</th>
-                    <th>Colapsadas</th>
-                    <th>Demoler</th>
-                    <th>Recuperables</th>
-                    <th>Logros</th>
+                    <th>PROT.CIV.</th>
+                    <th>BOMBEROS</th>
+                    <th>DELEGACIÓN</th>
+                    <th class="text-primary fw-bold">TOTAL</th>
+                    <th>Acciones</th>
                   </tr>
                 </thead>
                 <tbody id="reportsTableBody">
@@ -579,6 +583,23 @@
         </div>
 
       </div>
+      <!-- Modal Detalles -->
+      <div class="modal fade" id="reportModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content text-bg-dark"
+            style="background-color: var(--bg-card) !important; color: var(--text-main) !important; border: 1px solid var(--border-color);">
+            <div class="modal-header border-bottom border-secondary">
+              <h5 class="modal-title fw-bold" id="modalTitle">Reporte de Operación</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalBodyContent">
+              <!-- Renderizado dinámicamente -->
+            </div>
+          </div>
+        </div>
+      </div>
+
     </main>
   </div>
 
@@ -918,10 +939,10 @@
     function renderTable(rows) {
       const tbody = document.getElementById('reportsTableBody');
       if (!rows || rows.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="27" class="text-center py-4 text-muted">No hay registros</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="13" class="text-center py-4 text-muted">No hay registros</td></tr>';
         return;
       }
-      tbody.innerHTML = rows.map(r => `
+      tbody.innerHTML = rows.map((r, i) => `
       <tr>
         <td>${r.fecha}</td>
         <td>C${r.cuadrante} / E${r.escuadra}</td>
@@ -935,23 +956,80 @@
         <td>${r.bomb}</td>
         <td>${r.delg}</td>
         <td class="fw-bold text-primary">${r.totalP}</td>
-        <td class="text-success fw-bold">${r.evV}</td>
-        <td class="text-danger fw-bold">${r.evSV}</td>
-        <td>${r.ret}</td>
-        <td>${r.jum}</td>
-        <td>${r.vol}</td>
-        <td>${r.pl}</td>
-        <td>${r.eint}</td>
-        <td>${r.einsp}</td>
-        <td>${r.eviv}</td>
-        <td>${r.eloc}</td>
-        <td>${r.eesc}</td>
-        <td>${r.ecolp}</td>
-        <td>${r.edem}</td>
-        <td>${r.erec}</td>
-        <td><small class="text-truncate d-inline-block" style="max-width:200px;" title="${r.logros}">${r.logros}</small></td>
+        <td>
+          <button class="btn btn-sm btn-outline-info rounded-pill px-3" onclick="showDetails(${i})">
+            <i class="bi bi-eye"></i> Ver
+          </button>
+        </td>
       </tr>
     `).join('');
+    }
+
+    // Modal view function
+    window.showDetails = function (index) {
+      const r = globalData.rows[index];
+      if (!r) return;
+
+      document.getElementById('modalTitle').innerHTML = `
+        Operación: <span class="text-primary">Cuadrante ${r.cuadrante} de la escuadra ${r.escuadra}</span> 
+        <small class="text-muted d-block mt-1">Ubicados en el sector: ${r.ubicacion}</small>
+      `;
+
+      const html = \`
+        <div class="row g-4">
+          <!-- SITUACION PERSONAL -->
+          <div class="col-md-6">
+            <h6 class="text-uppercase fw-bold text-primary border-bottom border-secondary pb-2 mb-3">Situación Personal</h6>
+            <div class="d-flex justify-content-between mb-2"><span>OFICIAL/GRAL</span> <span class="fw-bold">\${r.og}</span></div>
+            <div class="d-flex justify-content-between mb-2"><span>OFI/SUP</span> <span class="fw-bold">\${r.osup}</span></div>
+            <div class="d-flex justify-content-between mb-2"><span>OFI/SUB</span> <span class="fw-bold">\${r.osub}</span></div>
+            <div class="d-flex justify-content-between mb-2"><span>TT/PP</span> <span class="fw-bold">\${r.ttpp}</span></div>
+            <div class="d-flex justify-content-between mb-2"><span>TT/AA</span> <span class="fw-bold">\${r.ttaa}</span></div>
+            <div class="d-flex justify-content-between mb-2"><span>PROT. CIVIL</span> <span class="fw-bold">\${r.pc}</span></div>
+            <div class="d-flex justify-content-between mb-2"><span>BOMBEROS</span> <span class="fw-bold">\${r.bomb}</span></div>
+            <div class="d-flex justify-content-between mb-2"><span>DELEGACIÓN EXTR.</span> <span class="fw-bold">\${r.delg}</span></div>
+            <div class="d-flex justify-content-between mt-3 pt-2 border-top border-secondary text-info fw-bold fs-5">
+              <span>TOTAL</span> <span>\${r.totalP}</span>
+            </div>
+          </div>
+          
+          <div class="col-md-6">
+             <!-- MAQUINARIAS -->
+             <h6 class="text-uppercase fw-bold text-warning border-bottom border-secondary pb-2 mb-3 mt-4 mt-md-0">Maquinaria Desplegada</h6>
+             <div class="d-flex justify-content-between mb-2"><span>Retroexcavadoras</span> <span class="fw-bold">\${r.ret}</span></div>
+             <div class="d-flex justify-content-between mb-2"><span>Jumbos</span> <span class="fw-bold">\${r.jum}</span></div>
+             <div class="d-flex justify-content-between mb-2"><span>Camiones Volteo</span> <span class="fw-bold">\${r.vol}</span></div>
+             <div class="d-flex justify-content-between mb-2"><span>Plantas Eléctricas</span> <span class="fw-bold">\${r.pl}</span></div>
+
+             <!-- EVACUADOS -->
+             <h6 class="text-uppercase fw-bold text-success border-bottom border-secondary pb-2 mb-3 mt-4">Situación Evacuados</h6>
+             <div class="d-flex justify-content-between mb-2"><span>Con Vida</span> <span class="fw-bold text-success">\${r.evV}</span></div>
+             <div class="d-flex justify-content-between mb-2"><span>Sin Vida</span> <span class="fw-bold text-danger">\${r.evSV}</span></div>
+          </div>
+
+          <div class="col-12 mt-4">
+             <!-- EDIFICACIONES -->
+             <h6 class="text-uppercase fw-bold text-danger border-bottom border-secondary pb-2 mb-3">Infraestructura y Edificaciones</h6>
+             <div class="row text-center g-2">
+                <div class="col-4 col-md-3"><div class="p-2 bg-secondary bg-opacity-10 rounded"><small class="d-block text-muted">Intervenidas</small><span class="fw-bold">\${r.eint}</span></div></div>
+                <div class="col-4 col-md-3"><div class="p-2 bg-secondary bg-opacity-10 rounded"><small class="d-block text-muted">Inspeccionadas</small><span class="fw-bold">\${r.einsp}</span></div></div>
+                <div class="col-4 col-md-3"><div class="p-2 bg-secondary bg-opacity-10 rounded"><small class="d-block text-muted">Viviendas</small><span class="fw-bold">\${r.eviv}</span></div></div>
+                <div class="col-4 col-md-3"><div class="p-2 bg-secondary bg-opacity-10 rounded"><small class="d-block text-muted">Locales</small><span class="fw-bold">\${r.eloc}</span></div></div>
+                <div class="col-4 col-md-3"><div class="p-2 bg-secondary bg-opacity-10 rounded"><small class="d-block text-muted">Escuelas</small><span class="fw-bold">\${r.eesc}</span></div></div>
+                <div class="col-4 col-md-3"><div class="p-2 bg-danger bg-opacity-10 text-danger rounded"><small class="d-block">Colapsadas</small><span class="fw-bold">\${r.ecolp}</span></div></div>
+                <div class="col-4 col-md-3"><div class="p-2 bg-warning bg-opacity-10 text-warning rounded"><small class="d-block">Para Demoler</small><span class="fw-bold">\${r.edem}</span></div></div>
+                <div class="col-4 col-md-3"><div class="p-2 bg-success bg-opacity-10 text-success rounded"><small class="d-block">Recuperables</small><span class="fw-bold">\${r.erec}</span></div></div>
+             </div>
+          </div>
+
+          <div class="col-12 mt-4">
+             <h6 class="text-uppercase fw-bold border-bottom border-secondary pb-2 mb-3">Resumen de Operación</h6>
+             <div class="p-3 bg-secondary bg-opacity-10 rounded" style="white-space: pre-wrap;">\${r.logros || 'Sin detalles registrados.'}</div>
+          </div>
+        </div>
+      \`;
+      document.getElementById('modalBodyContent').innerHTML = html;
+      new bootstrap.Modal(document.getElementById('reportModal')).show();
     }
 
     function commonChartOptions() {
