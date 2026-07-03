@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel de Control - Puesto de Comando</title>
+  <title>Puesto de Comando</title>
 
   <!-- Bootstrap 5.3 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -295,7 +295,7 @@
         <ul class="nav nav-pills flex-column">
           <li class="nav-item">
             <a href="#overview" class="nav-link active" data-tab="overview">
-              <i class="bi bi-grid"></i> Dashboard
+              <i class="bi bi-grid"></i> Panel Control
             </a>
           </li>
           <li class="nav-item">
@@ -339,7 +339,10 @@
             style="font-size: 1.5rem; text-decoration: none;">
             <i class="bi bi-list"></i>
           </button>
-          <h4 class="mb-0 fw-bold d-none d-sm-block">Panel de Control</h4>
+          <div>
+            <h5 class="mb-0 fw-bold d-none d-sm-block">Panel de Control</h5>
+            <small class="text-muted d-none d-sm-block" style="font-size: 0.75rem;">Visión General Operativa</small>
+          </div>
         </div>
         <div class="d-flex align-items-center gap-3">
           <button class="btn btn-outline-secondary btn-sm" id="btnRefresh" title="Actualizar datos">
@@ -534,14 +537,37 @@
             </div>
 
             <div class="table-responsive">
-              <table class="table table-modern w-100" id="reportsTable">
+              <table class="table table-modern w-100" id="reportsTable"
+                style="white-space: nowrap; font-size: 0.85rem;">
                 <thead>
                   <tr>
                     <th>Fecha</th>
-                    <th>Ubicación (Cuadrante/Escuadra)</th>
-                    <th>Personal (OFI/SUB/TT)</th>
-                    <th>Evacuados (V/SV)</th>
-                    <th>Operaciones (Logros/Nov)</th>
+                    <th>C/E</th>
+                    <th>Ubicación</th>
+                    <th>Ofic/Gral</th>
+                    <th>Ofic/Sup</th>
+                    <th>Ofic/Sub</th>
+                    <th>TT/PP</th>
+                    <th>TT/AA</th>
+                    <th>Prot.Civil</th>
+                    <th>Bomberos</th>
+                    <th>Deleg.Ext</th>
+                    <th class="text-primary fw-bold">Total Per.</th>
+                    <th>Evac.Vida</th>
+                    <th>Evac.SinVida</th>
+                    <th>Retroexc.</th>
+                    <th>Jumbos</th>
+                    <th>Volteos</th>
+                    <th>Plantas</th>
+                    <th>Edif. Int.</th>
+                    <th>Edif. Insp.</th>
+                    <th>Viviendas</th>
+                    <th>Locales</th>
+                    <th>Escuelas</th>
+                    <th>Colapsadas</th>
+                    <th>Demoler</th>
+                    <th>Recuperables</th>
+                    <th>Logros</th>
                   </tr>
                 </thead>
                 <tbody id="reportsTableBody">
@@ -750,16 +776,39 @@
             { name: 'Sur', data: [{ x: 'L', y: 5 }, { x: 'M', y: 10 }, { x: 'X', y: 8 }] }
           ]
         },
-        rows: (dbData.actividad_reciente || []).map(r => ({
-          fecha: (r.fecha_registro || "").substring(0, 16),
-          cuadrante: r.cuadrante,
-          escuadra: r.escuadra,
-          personal: 0,
-          evacuados_vida: 0,
-          evacuados_sin_vida: 0,
-          logros: r.logros_alcanzados ? 1 : 0,
-          novedades: r.logros_alcanzados ? 0 : 1
-        }))
+        rows: (dbData.actividad_reciente || []).map(r => {
+          const pSum = (parseInt(r.ofi_gral || 0) + parseInt(r.ofi_sup || 0) + parseInt(r.ofi_sub || 0) + parseInt(r.tt_pp || 0) + parseInt(r.tt_aa || 0) + parseInt(r.proteccion_civil || 0) + parseInt(r.bomberos || 0) + parseInt(r.delegacion_extr || 0));
+          return {
+            fecha: (r.fecha_registro || "").substring(0, 16),
+            cuadrante: r.cuadrante || '--',
+            escuadra: r.escuadra || '--',
+            ubicacion: r.sector_ubicacion || 'N/A',
+            og: r.ofi_gral || 0,
+            osup: r.ofi_sup || 0,
+            osub: r.ofi_sub || 0,
+            ttpp: r.tt_pp || 0,
+            ttaa: r.tt_aa || 0,
+            pc: r.proteccion_civil || 0,
+            bomb: r.bomberos || 0,
+            delg: r.delegacion_extr || 0,
+            totalP: pSum,
+            evV: r.evacuados_con_vida || 0,
+            evSV: r.evacuados_sin_vida || 0,
+            ret: r.retroexcavadora || 0,
+            jum: r.jumbo || 0,
+            vol: r.camiones_volteo || 0,
+            pl: r.plantas_electricas || 0,
+            eint: r.edificaciones_intervenidas || 0,
+            einsp: r.edificios_inspeccionados || 0,
+            eviv: r.viviendas_casas || 0,
+            eloc: r.locales_comerciales || 0,
+            eesc: r.escuelas || 0,
+            ecolp: r.edificaciones_colapsadas || 0,
+            edem: r.edificaciones_para_demoler || 0,
+            erec: r.edificaciones_recuperables || 0,
+            logros: r.logros_alcanzados || ''
+          };
+        })
       };
     }
 
@@ -869,16 +918,38 @@
     function renderTable(rows) {
       const tbody = document.getElementById('reportsTableBody');
       if (!rows || rows.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">No hay registros</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="27" class="text-center py-4 text-muted">No hay registros</td></tr>';
         return;
       }
       tbody.innerHTML = rows.map(r => `
       <tr>
         <td>${r.fecha}</td>
         <td>C${r.cuadrante} / E${r.escuadra}</td>
-        <td><span class="badge bg-secondary">${r.personal}</span></td>
-        <td><span class="text-success">${r.evacuados_vida}</span> / <span class="text-danger">${r.evacuados_sin_vida}</span></td>
-        <td><span class="badge border border-primary text-primary">${r.logros} L</span> - <span class="badge border border-warning text-warning">${r.novedades} N</span></td>
+        <td class="fw-bold">${r.ubicacion}</td>
+        <td>${r.og}</td>
+        <td>${r.osup}</td>
+        <td>${r.osub}</td>
+        <td>${r.ttpp}</td>
+        <td>${r.ttaa}</td>
+        <td>${r.pc}</td>
+        <td>${r.bomb}</td>
+        <td>${r.delg}</td>
+        <td class="fw-bold text-primary">${r.totalP}</td>
+        <td class="text-success fw-bold">${r.evV}</td>
+        <td class="text-danger fw-bold">${r.evSV}</td>
+        <td>${r.ret}</td>
+        <td>${r.jum}</td>
+        <td>${r.vol}</td>
+        <td>${r.pl}</td>
+        <td>${r.eint}</td>
+        <td>${r.einsp}</td>
+        <td>${r.eviv}</td>
+        <td>${r.eloc}</td>
+        <td>${r.eesc}</td>
+        <td>${r.ecolp}</td>
+        <td>${r.edem}</td>
+        <td>${r.erec}</td>
+        <td><small class="text-truncate d-inline-block" style="max-width:200px;" title="${r.logros}">${r.logros}</small></td>
       </tr>
     `).join('');
     }
