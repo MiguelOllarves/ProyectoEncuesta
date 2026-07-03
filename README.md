@@ -19,3 +19,4 @@ Este proyecto es una aplicación de encuestas con un panel administrativo de int
     - `guardar.php`: endpoint para almacenar reportes.
     - `estadisticas.php`: endpoint para obtener métricas y datos del dashboard.
 - `setup.php`: script de inicializac
+ssdsdsads
