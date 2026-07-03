@@ -239,47 +239,39 @@
       btn.innerText = 'Enviando...';
       btn.disabled = true;
 
-      // Objeto de payload completo con toda la data
+      // Objeto de payload de forma 'plana' para que el PHP lo reciba directo para la tabla reportes_cuadrantes
       const payload = {
         cuadrante: document.getElementById('cuadrante').value,
         escuadra: document.getElementById('escuadra').value,
-        sector: document.getElementById('sector').value,
-        personal: {
-          ofi_gral: document.getElementById('p_ofi_gral').value,
-          ofi_sup: document.getElementById('p_ofi_sup').value,
-          ofi_sub: document.getElementById('p_ofi_sub').value,
-          tt_pp: document.getElementById('p_tt_pp').value,
-          tt_aa: document.getElementById('p_tt_aa').value,
-          prot_civil: document.getElementById('p_prot_civil').value,
-          bomberos: document.getElementById('p_bomberos').value,
-          delegacion: document.getElementById('p_delegacion').value,
-        },
-        evacuados: {
-          vida: document.getElementById('eva_vida').value,
-          sin_vida: document.getElementById('eva_sin_vida').value
-        },
-        maquinaria: {
-          retro: document.getElementById('maq_retro').value,
-          jumbo: document.getElementById('maq_jumbo').value,
-          volteo: document.getElementById('maq_volteo').value,
-          planta: document.getElementById('maq_planta').value
-        },
-        edificaciones: {
-          inter: document.getElementById('edi_inter').value,
-          inspe: document.getElementById('edi_inspe').value,
-          vivi: document.getElementById('edi_vivi').value,
-          local: document.getElementById('edi_local').value,
-          escue: document.getElementById('edi_escue').value,
-          colap: document.getElementById('edi_colap').value,
-          demol: document.getElementById('edi_demol').value,
-          recup: document.getElementById('edi_recup').value,
-        },
-        resumen: document.getElementById('resumen_ops').value
+        sector_ubicacion: document.getElementById('sector').value,
+        ofi_gral: document.getElementById('p_ofi_gral').value,
+        ofi_sup: document.getElementById('p_ofi_sup').value,
+        ofi_sub: document.getElementById('p_ofi_sub').value,
+        tt_pp: document.getElementById('p_tt_pp').value,
+        tt_aa: document.getElementById('p_tt_aa').value,
+        proteccion_civil: document.getElementById('p_prot_civil').value,
+        bomberos: document.getElementById('p_bomberos').value,
+        delegacion_extr: document.getElementById('p_delegacion').value,
+        evacuados_con_vida: document.getElementById('eva_vida').value,
+        evacuados_sin_vida: document.getElementById('eva_sin_vida').value,
+        retroexcavadora: document.getElementById('maq_retro').value,
+        jumbo: document.getElementById('maq_jumbo').value,
+        camiones_volteo: document.getElementById('maq_volteo').value,
+        plantas_electricas: document.getElementById('maq_planta').value,
+        edificaciones_intervenidas: document.getElementById('edi_inter').value,
+        edificios_inspeccionados: document.getElementById('edi_inspe').value,
+        viviendas_casas: document.getElementById('edi_vivi').value,
+        locales_comerciales: document.getElementById('edi_local').value,
+        escuelas: document.getElementById('edi_escue').value,
+        edificaciones_colapsadas: document.getElementById('edi_colap').value,
+        edificaciones_para_demoler: document.getElementById('edi_demol').value,
+        edificaciones_recuperables: document.getElementById('edi_recup').value,
+        logros_alcanzados: document.getElementById('resumen_ops').value
       };
 
       try {
         // Llamado a backend de inserción
-        const res = await fetch('/api/reports/save.php', {
+        const res = await fetch('/api/encuestas/guardar.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)

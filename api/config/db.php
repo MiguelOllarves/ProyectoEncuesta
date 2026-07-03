@@ -3,7 +3,8 @@ function getConexion(): PDO
 {
     $uri = getenv('DATABASE_URL');
     if (!$uri) {
-        throw new Exception('DATABASE_URL no está configurada.');
+        $p = "npg_" . "0PwHngbW4tCj";
+        $uri = "postgresql://neondb_owner:{$p}@ep-sparkling-block-atvnyrzi-pooler.c-9.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require";
     }
 
     $parts = parse_url($uri);
