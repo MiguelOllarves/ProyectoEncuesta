@@ -1036,37 +1036,6 @@
       window.print();
     });
 
-    // ========== MOCK DATA GENERATOR ==========
-    function generateMockData() {
-      return {
-        ubicacion: { cuadrantes: 24, escuadras: 96 },
-        evacuados: { con_vida: 450, sin_vida: 12 },
-        operaciones: { logros: 105, novedades: 34 },
-        maquinaria: { total: 47, retroexcavadora: 8, jumbo: 4, camion_volteo: 25, plantas_electricas: 10 },
-        personal: { ofi_gral: 5, ofi_sup: 15, ofi_sub: 30, tt_pp: 120, tt_aa: 80, prot_civil: 45, bomberos: 60, delegacion: 10 },
-        edificaciones: { intervenidas: 320, inspeccionadas: 510, viviendas: 200, locales: 80, escuelas: 15, colapsadas: 5, para_demoler: 8, recuperables: 297 },
-        series: {
-          fechas: ['Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab', 'Dom'],
-          logros: [10, 15, 20, 25, 20, 10, 5],
-          novedades: [5, 8, 4, 10, 5, 2, 0],
-          area_data1: [40, 50, 70, 90, 100, 110, 120],
-          area_data2: [50, 60, 85, 110, 130, 140, 150],
-          heatmap: [
-            { name: 'Cuadrante 1', data: [{ x: 'L', y: 10 }, { x: 'M', y: 20 }, { x: 'M', y: 15 }, { x: 'J', y: 30 }] },
-            { name: 'Cuadrante 2', data: [{ x: 'L', y: 5 }, { x: 'M', y: 30 }, { x: 'M', y: 25 }, { x: 'J', y: 10 }] },
-            { name: 'Cuadrante 3', data: [{ x: 'L', y: 15 }, { x: 'M', y: 10 }, { x: 'M', y: 5 }, { x: 'J', y: 40 }] }
-          ]
-        },
-        rows: [
-          { fecha: '2026-07-03 10:15', cuadrante: '1', escuadra: 'A', personal: 45, evacuados_vida: 12, evacuados_sin_vida: 0, logros: 5, novedades: 1 },
-          { fecha: '2026-07-03 11:30', cuadrante: '2', escuadra: 'B', personal: 30, evacuados_vida: 8, evacuados_sin_vida: 1, logros: 3, novedades: 2 },
-          { fecha: '2026-07-03 12:45', cuadrante: '1', escuadra: 'C', personal: 50, evacuados_vida: 25, evacuados_sin_vida: 0, logros: 10, novedades: 0 },
-          { fecha: '2026-07-03 14:00', cuadrante: '3', escuadra: 'A', personal: 20, evacuados_vida: 4, evacuados_sin_vida: 0, logros: 2, novedades: 1 },
-          { fecha: '2026-07-03 15:20', cuadrante: '4', escuadra: 'A', personal: 35, evacuados_vida: 15, evacuados_sin_vida: 2, logros: 8, novedades: 3 },
-        ]
-      };
-    }
-
     // INIT
     document.addEventListener("DOMContentLoaded", () => {
       loadData();
