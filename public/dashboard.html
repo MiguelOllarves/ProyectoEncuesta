@@ -688,97 +688,93 @@
     let globalData = {};
 
     function adaptDbDataToUi(dbData) {
-        const getCardVal = (arr, labelPrefix) => {
-            if(!arr) return 0;
-            const item = arr.find(x => x.label && x.label.toUpperCase().startsWith(labelPrefix.toUpperCase()));
-            return item ? item.value : 0;
-        };
+      const getCardVal = (arr, labelPrefix) => {
+        if (!arr) return 0;
+        const item = arr.find(x => x.label && x.label.toUpperCase().startsWith(labelPrefix.toUpperCase()));
+        return item ? item.value : 0;
+      };
 
-        const t = dbData.totales || {};
-        const pCards = dbData.personnel_cards || [];
-        const mCards = dbData.machinery_cards || [];
-        const eCards = dbData.building_cards || [];
-        
-        return {
-            ubicacion: { 
-                cuadrantes: t.total_cuadrantes || 0, 
-                escuadras: t.total_escuadras || 0 
-            },
-            evacuados: { 
-                con_vida: t.total_evacuados_vida || 0, 
-                sin_vida: t.total_evacuados_sin_vida || 0 
-            },
-            operaciones: { 
-                logros: dbData.operations?.logros || 0, 
-                novedades: dbData.operations?.novedades || 0 
-            },
-            maquinaria: { 
-                total: t.total_maquinaria || 0, 
-                retroexcavadora: getCardVal(mCards, 'Retroexcavadora'), 
-                jumbo: getCardVal(mCards, 'Jumbo'), 
-                camion_volteo: getCardVal(mCards, 'Camiones volteo'), 
-                plantas_electricas: getCardVal(mCards, 'Plantas') 
-            },
-            personal: { 
-                ofi_gral: getCardVal(pCards, 'OFI/GRAL'), 
-                ofi_sup: getCardVal(pCards, 'OFI/SUP'), 
-                ofi_sub: getCardVal(pCards, 'OFI/SUB'), 
-                tt_pp: getCardVal(pCards, 'TT/PP'), 
-                tt_aa: getCardVal(pCards, 'TT/AA'), 
-                prot_civil: getCardVal(pCards, 'PROTECCI'), 
-                bomberos: getCardVal(pCards, 'BOMBEROS'), 
-                delegacion: getCardVal(pCards, 'DELEGACION') 
-            },
-            edificaciones: { 
-                intervenidas: getCardVal(eCards, 'Intervenidas'), 
-                inspeccionadas: getCardVal(eCards, 'Inspeccionadas'), 
-                viviendas: getCardVal(eCards, 'Viviendas'), 
-                locales: getCardVal(eCards, 'Locales'), 
-                escuelas: getCardVal(eCards, 'Escuelas'), 
-                colapsadas: getCardVal(eCards, 'Colapsadas'), 
-                para_demoler: getCardVal(eCards, 'Para demoler'), 
-                recuperables: getCardVal(eCards, 'Recuperables') 
-            },
-            series: {
-                fechas: (dbData.series?.daily || []).map(x => x.label),
-                logros: (dbData.series?.daily || []).map(x => x.value),
-                novedades: (dbData.series?.daily || []).map(x => Math.floor(x.value / 4)), // Aproximacion demostrativa
-                area_data1: (dbData.series?.monthly || []).map(x => x.value),
-                area_data2: (dbData.series?.weekly || []).map(x => x.value),
-                heatmap: [
-                    { name: 'Norte', data: [{ x: 'L', y: 10 }, { x: 'M', y: 20 }, { x: 'X', y: 30 }] },
-                    { name: 'Sur', data: [{ x: 'L', y: 5 }, { x: 'M', y: 10 }, { x: 'X', y: 8 }] }
-                ]
-            },
-            rows: (dbData.actividad_reciente || []).map(r => ({
-                fecha: (r.fecha_registro || "").substring(0, 16),
-                cuadrante: r.cuadrante,
-                escuadra: r.escuadra,
-                personal: 0,
-                evacuados_vida: 0,
-                evacuados_sin_vida: 0,
-                logros: r.logros_alcanzados ? 1 : 0,
-                novedades: r.logros_alcanzados ? 0 : 1
-            }))
-        };
+      const t = dbData.totales || {};
+      const pCards = dbData.personnel_cards || [];
+      const mCards = dbData.machinery_cards || [];
+      const eCards = dbData.building_cards || [];
+
+      return {
+        ubicacion: {
+          cuadrantes: t.total_cuadrantes || 0,
+          escuadras: t.total_escuadras || 0
+        },
+        evacuados: {
+          con_vida: t.total_evacuados_vida || 0,
+          sin_vida: t.total_evacuados_sin_vida || 0
+        },
+        operaciones: {
+          logros: dbData.operations?.logros || 0,
+          novedades: dbData.operations?.novedades || 0
+        },
+        maquinaria: {
+          total: t.total_maquinaria || 0,
+          retroexcavadora: getCardVal(mCards, 'Retroexcavadora'),
+          jumbo: getCardVal(mCards, 'Jumbo'),
+          camion_volteo: getCardVal(mCards, 'Camiones volteo'),
+          plantas_electricas: getCardVal(mCards, 'Plantas')
+        },
+        personal: {
+          ofi_gral: getCardVal(pCards, 'OFI/GRAL'),
+          ofi_sup: getCardVal(pCards, 'OFI/SUP'),
+          ofi_sub: getCardVal(pCards, 'OFI/SUB'),
+          tt_pp: getCardVal(pCards, 'TT/PP'),
+          tt_aa: getCardVal(pCards, 'TT/AA'),
+          prot_civil: getCardVal(pCards, 'PROTECCI'),
+          bomberos: getCardVal(pCards, 'BOMBEROS'),
+          delegacion: getCardVal(pCards, 'DELEGACION')
+        },
+        edificaciones: {
+          intervenidas: getCardVal(eCards, 'Intervenidas'),
+          inspeccionadas: getCardVal(eCards, 'Inspeccionadas'),
+          viviendas: getCardVal(eCards, 'Viviendas'),
+          locales: getCardVal(eCards, 'Locales'),
+          escuelas: getCardVal(eCards, 'Escuelas'),
+          colapsadas: getCardVal(eCards, 'Colapsadas'),
+          para_demoler: getCardVal(eCards, 'Para demoler'),
+          recuperables: getCardVal(eCards, 'Recuperables')
+        },
+        series: {
+          fechas: (dbData.series?.daily || []).map(x => x.label),
+          logros: (dbData.series?.daily || []).map(x => x.value),
+          novedades: (dbData.series?.daily || []).map(x => Math.floor(x.value / 4)), // Aproximacion demostrativa
+          area_data1: (dbData.series?.monthly || []).map(x => x.value),
+          area_data2: (dbData.series?.weekly || []).map(x => x.value),
+          heatmap: [
+            { name: 'Norte', data: [{ x: 'L', y: 10 }, { x: 'M', y: 20 }, { x: 'X', y: 30 }] },
+            { name: 'Sur', data: [{ x: 'L', y: 5 }, { x: 'M', y: 10 }, { x: 'X', y: 8 }] }
+          ]
+        },
+        rows: (dbData.actividad_reciente || []).map(r => ({
+          fecha: (r.fecha_registro || "").substring(0, 16),
+          cuadrante: r.cuadrante,
+          escuadra: r.escuadra,
+          personal: 0,
+          evacuados_vida: 0,
+          evacuados_sin_vida: 0,
+          logros: r.logros_alcanzados ? 1 : 0,
+          novedades: r.logros_alcanzados ? 0 : 1
+        }))
+      };
     }
 
     async function loadData() {
       setSkeletons(true);
 
       try {
-        const res = await fetch('/api/encuestas/estadisticas.php').catch(() => null);
-        let resp = res && res.ok ? await res.json() : null;
+        const res = await fetch('/api/encuestas/estadisticas.php');
+        let resp = res.ok ? await res.json() : null;
 
-        let data;
         if (!resp || !resp.success || !resp.data || !resp.data.totales) {
-          data = generateMockData();
-        } else {
-          data = adaptDbDataToUi(resp.data);
+          throw new Error(resp?.error || 'Error desconocido al contactar PHP');
         }
 
-        globalData = data;
-
+        globalData = adaptDbDataToUi(resp.data);
         renderKPIs(globalData);
         renderUILists(globalData);
         renderCharts(globalData);
@@ -790,13 +786,12 @@
       } catch (e) {
         console.error(e);
         setSkeletons(false);
-        // Fallback robusto en caso de error javascript
-        globalData = generateMockData();
-        renderKPIs(globalData);
-        renderUILists(globalData);
-        renderCharts(globalData);
-        renderTable(globalData.rows);
-        Toast.fire({ icon: 'warning', title: 'Falla local, usando datos MOCK.' });
+        Swal.fire({
+          icon: 'error',
+          title: 'Error de Vercel/Base de Datos',
+          text: e.message || e.toString(),
+          confirmButtonColor: '#dc2626'
+        });
       }
     }
 

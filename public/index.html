@@ -296,16 +296,13 @@
           });
         }
       } catch (err) {
-        // Si la API falla debido a CORS o 404, mostramos el exito visual para cumplir 
-        // la tarea de UX pedida
-        console.warn("API route not fully integrated. Falling back to simple success prompt", err);
+        console.error("Error al enviar", err);
         Swal.fire({
-          icon: 'success',
-          title: 'Reporte procesado',
-          text: 'Se ha insertado correctamente. ¡Listo!',
-          confirmButtonColor: '#1e3a8a'
+          icon: 'error',
+          title: 'Error Crítico',
+          text: err.message || 'La API o la Base de Datos falló al guardar.',
+          confirmButtonColor: '#dc2626'
         });
-        e.target.reset();
       }
 
       // Restauramos el boton
